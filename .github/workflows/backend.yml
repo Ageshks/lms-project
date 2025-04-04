@@ -1,4 +1,4 @@
-name: NestJS Backend CI/CD
+name: NestJS Backend CI
 
 on:
   push:
@@ -20,48 +20,16 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
         working-directory: backend
-
-      # PostgreSQL Setup (Linux)
-      - name: Start PostgreSQL on Ubuntu
-        if: runner.os == 'Linux'
-        run: |
-          sudo systemctl start postgresql
-          sudo -u postgres psql -c "CREATE USER test_user WITH PASSWORD 'test_pass';"
-          sudo -u postgres psql -c "CREATE DATABASE test_db OWNER test_user;"
-          sudo -u postgres psql -c "ALTER USER test_user CREATEDB;"
-
-      # PostgreSQL Setup (Windows)
-      - name: Start PostgreSQL on Windows
-        if: runner.os == 'Windows'
-        run: |
-          choco install postgresql --yes
-          setx PATH "%PATH%;C:\Program Files\PostgreSQL\14\bin"
-          pg_ctl initdb -D C:\pgdata
-          pg_ctl start -D C:\pgdata -l logfile
-          psql -U postgres -c "CREATE USER test_user WITH PASSWORD 'test_pass';"
-          psql -U postgres -c "CREATE DATABASE test_db OWNER test_user;"
-        shell: cmd
-
-      - name: Wait for PostgreSQL to be ready
-        run: |
-          for i in {1..10}; do
-            pg_isready -h localhost -U test_user -d test_db && break
-            echo "Waiting for PostgreSQL..."
-            sleep 3
-          done
-        shell: bash
-        if: runner.os == 'Linux'
 
       - name: Lint
         run: npm run lint
@@ -74,26 +42,3 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: backend
-
-  deploy:
-    name: Deploy Backend
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main'
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd /var/www/backend
-            git pull origin main
-            npm install
-            npm run build
-            pm2 restart all
