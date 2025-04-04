@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - 'Backend/lms/my-nestjs-project/**'
-      - '.github/workflows/backend.yml'
     branches:
       - main
 
@@ -14,8 +13,15 @@ jobs:
     
     steps:
       - uses: actions/checkout@v3
-        with:
-          path: 'Backend/lms/my-nestjs-project'
+
+      - name: Verify repository structure
+        run: |
+          echo "Current working directory: $(pwd)"
+          ls -la
+          ls -la Backend/
+          ls -la Backend/lms/
+          ls -la Backend/lms/my-nestjs-project/
+        working-directory: .
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -23,14 +29,13 @@ jobs:
           node-version: 18
           cache: 'npm'
 
-      - name: Verify files
-        run: |
-          ls -la
-          ls -la Backend/lms/my-nestjs-project
-        working-directory: .
-
       - name: Install dependencies
-        run: npm ci
+        run: |
+          if [ -f "package-lock.json" ]; then
+            npm ci
+          else
+            npm install
+          fi
         working-directory: Backend/lms/my-nestjs-project
 
       - name: Lint
