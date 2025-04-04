@@ -3,13 +3,13 @@ name: NestJS Backend CI
 on:
   push:
     paths:
-      - 'backend/**'
+      - 'Backend/**'
       - '.github/workflows/backend.yml'
     branches:
       - main
   pull_request:
     paths:
-      - 'backend/**'
+      - 'Backend/**'
       - '.github/workflows/backend.yml'
 
 jobs:
@@ -18,27 +18,26 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-
     steps:
       - uses: actions/checkout@v3
-
+      
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
-
+          
       - name: Install dependencies
         run: npm install
-        working-directory: backend
-
+        working-directory: Backend/lms
+          
       - name: Lint
         run: npm run lint
-        working-directory: backend
-
+        working-directory: Backend/lms
+          
       - name: Run Tests
         run: npm run test
-        working-directory: backend
-
+        working-directory: Backend/lms
+          
       - name: Build
         run: npm run build
-        working-directory: backend
+        working-directory: Backend/lms
