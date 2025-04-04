@@ -26,7 +26,7 @@ jobs:
         run: |
           echo "Current directory: $(pwd)"
           ls -la
-          ls -la frontend/
+          ls -la frontend/lms
         working-directory: .
 
       - name: Set up Flutter
