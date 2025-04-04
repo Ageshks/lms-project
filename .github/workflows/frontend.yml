@@ -21,18 +21,20 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.16.0"
+          flutter-version: "stable"  # Always gets the latest stable release
+          cache: true  # Enables dependency caching for faster builds
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: flutter pub get
         working-directory: frontend
 
-      - name: Run tests
+      - name: Run Tests
         run: flutter test
         working-directory: frontend
 
@@ -44,4 +46,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: flutter-apk
-          path: frontend/build/app/outputs/flutter-apk/app-release.apk
+          path: frontend/build/app/outputs/flutter-apk/**/*.apk  # Supports both Windows & Ubuntu
