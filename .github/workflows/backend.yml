@@ -7,6 +7,7 @@ on:
       - '.github/workflows/backend.yml'
     branches:
       - main
+
   pull_request:
     paths:
       - 'Backend/lms/lms-backend/**'
@@ -18,28 +19,29 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
-          
+
       - name: Install dependencies
         run: npm install
         working-directory: Backend/lms/lms-backend
-          
+
       - name: Lint
         run: npm run lint
         working-directory: Backend/lms/lms-backend
-          
+
       - name: Run Tests
         run: npm run test
         working-directory: Backend/lms/lms-backend
-          
+
       - name: Build
         run: npm run build
         working-directory: Backend/lms/lms-backend
+
 
