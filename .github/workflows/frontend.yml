@@ -1,5 +1,4 @@
 name: Flutter Frontend CI
-
 on:
   push:
     paths:
@@ -11,7 +10,6 @@ on:
     paths:
       - 'frontend/lms/**'
       - '.github/workflows/frontend.yml'
-
 jobs:
   build:
     name: Build & Test Flutter
@@ -19,41 +17,50 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-
+        
+      # Option 1: Fixed Flutter setup using specific version
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.19.3"
+          flutter-version: '3.19.3'  # Specific version instead of 'stable'
+          channel: 'stable'          # Explicitly specify channel
           cache: true
-
+          
+      # Option 2 (alternative): Manual Flutter installation if the above fails
+      # Uncomment this block and comment out the above "Set up Flutter" step if needed
+      # - name: Set up Flutter manually
+      #   run: |
+      #     git clone https://github.com/flutter/flutter.git
+      #     echo "$(pwd)/flutter/bin" >> $GITHUB_PATH
+      #     flutter precache
+      
       - name: Verify Flutter Installation
-        run: flutter doctor
-
+        run: flutter doctor -v  # Added verbose flag to get more information
+        
       - name: Install Dependencies
         run: flutter pub get
         working-directory: frontend/lms
-
+        
       - name: Run Tests
         run: flutter test
         working-directory: frontend/lms
-
+        
       - name: Build APK
         run: flutter build apk --release
         working-directory: frontend/lms
-
+        
       - name: Verify APK Exists
         run: ls -lh frontend/lms/build/app/outputs/flutter-apk/
-
+        
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: flutter-apk
           path: frontend/lms/build/app/outputs/flutter-apk/**/*.apk
-
+          
       - name: Cleanup Artifacts
         if: always()
         run: rm -rf frontend/lms/build
