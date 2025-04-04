@@ -1,15 +1,15 @@
 name: Flutter Frontend CI
+
 on:
   push:
     paths:
-      - 'frontend/lms/**'
-      - '.github/workflows/frontend.yml'
+      - 'frontend/**'
     branches:
       - main
   pull_request:
     paths:
-      - 'frontend/lms/**'
-      - '.github/workflows/frontend.yml'
+      - 'frontend/**'
+
 jobs:
   build:
     name: Build & Test Flutter
@@ -17,41 +17,47 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-        
+
+      - name: Verify Directory Structure
+        run: |
+          echo "Current directory: $(pwd)"
+          ls -la
+          ls -la frontend/
+        working-directory: .
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.29.2'  # Updated to match suggested version in error message
-          channel: 'stable'
+          flutter-version: "3.16.0"
           cache: true
-          
+
       - name: Verify Flutter Installation
-        run: flutter doctor -v
-        
+        run: flutter doctor
+
       - name: Install Dependencies
-        run: flutter pub get
-        working-directory: frontend/lms
-        
+        run: |
+          cd frontend || exit
+          flutter pub get
+
       - name: Run Tests
-        run: flutter test
-        working-directory: frontend/lms
-        
+        run: |
+          cd frontend || exit
+          flutter test
+
       - name: Build APK
-        run: flutter build apk --release
-        working-directory: frontend/lms
-        
+        run: |
+          cd frontend || exit
+          flutter build apk --release
+
       - name: Verify APK Exists
-        run: ls -lh frontend/lms/build/app/outputs/flutter-apk/
-        
+        run: ls -lh frontend/build/app/outputs/flutter-apk/
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: flutter-apk
-          path: frontend/lms/build/app/outputs/flutter-apk/**/*.apk
-          
-      - name: Cleanup Artifacts
-        if: always()
-        run: rm -rf frontend/lms/build
+          path: frontend/build/app/outputs/flutter-apk/**/*.apk
