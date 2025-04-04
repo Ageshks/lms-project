@@ -15,11 +15,8 @@ on:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
-
+    runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v3
 
@@ -27,13 +24,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm ci
+          npm install -g eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
         working-directory: Backend/lms/my-nestjs-project
 
       - name: Lint
-        run: npm run lint
+        run: |
+          chmod -R 777 node_modules/.bin/*
+          npm run lint
         working-directory: Backend/lms/my-nestjs-project
 
       - name: Run Tests
@@ -43,8 +45,3 @@ jobs:
       - name: Build
         run: npm run build
         working-directory: Backend/lms/my-nestjs-project
-
-      - name: Build
-        run: npm run build
-        working-directory: Backend/fms
-
