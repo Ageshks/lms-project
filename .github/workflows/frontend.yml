@@ -27,7 +27,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.16.0"
+          flutter-version: "stable"
           cache: true
 
       - name: Verify Flutter Installation
@@ -49,7 +49,7 @@ jobs:
         run: ls -lh frontend/lms/build/app/outputs/flutter-apk/
       
       - name: Upload APK
-        uses: actions/upload-artifact@v3.1.3
+        uses: actions/upload-artifact@v3
         with:
           name: flutter-apk
           path: frontend/lms/build/app/outputs/flutter-apk/**/*.apk
