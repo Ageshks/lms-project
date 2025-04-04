@@ -3,13 +3,13 @@ name: Flutter Frontend CI
 on:
   push:
     paths:
-      - 'frontend/**'
+      - 'frontend/lms/**'
       - '.github/workflows/frontend.yml'
     branches:
       - main
   pull_request:
     paths:
-      - 'frontend/**'
+      - 'frontend/lms/**'
       - '.github/workflows/frontend.yml'
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.16.0"
+          flutter-version: "stable"
           cache: true
 
       - name: Verify Flutter Installation
@@ -35,25 +35,25 @@ jobs:
 
       - name: Install Dependencies
         run: flutter pub get
-        working-directory: frontend
+        working-directory: frontend/lms
 
       - name: Run Tests
         run: flutter test
-        working-directory: frontend
+        working-directory: frontend/lms
 
       - name: Build APK
         run: flutter build apk --release
-        working-directory: frontend
+        working-directory: frontend/lms
 
       - name: Verify APK Exists
-        run: ls -lh frontend/build/app/outputs/flutter-apk/
+        run: ls -lh frontend/lms/build/app/outputs/flutter-apk/
       
       - name: Upload APK
-        uses: actions/upload-artifact@v4  # ✅ Use v4 to avoid errors
+        uses: actions/upload-artifact@v3
         with:
           name: flutter-apk
-          path: frontend/build/app/outputs/flutter-apk/**/*.apk
+          path: frontend/lms/build/app/outputs/flutter-apk/**/*.apk
 
       - name: Cleanup Artifacts
         if: always()
-        run: rm -rf frontend/build
+        run: rm -rf frontend/lms/build
