@@ -3,14 +3,14 @@ name: NestJS Backend CI
 on:
   push:
     paths:
-      - 'Backend/lms/lms-backend/**'
+      - 'Backend/fms/**'
       - '.github/workflows/backend.yml'
     branches:
       - main
 
   pull_request:
     paths:
-      - 'Backend/lms/lms-backend/**'
+      - 'Backend/fms/**'
       - '.github/workflows/backend.yml'
 
 jobs:
@@ -30,18 +30,17 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: Backend/lms/lms-backend
+        working-directory: Backend/fms
 
       - name: Lint
         run: npm run lint
-        working-directory: Backend/lms/lms-backend
+        working-directory: Backend/fms
 
       - name: Run Tests
         run: npm run test
-        working-directory: Backend/lms/lms-backend
+        working-directory: Backend/fms
 
       - name: Build
         run: npm run build
-        working-directory: Backend/lms/lms-backend
-
+        working-directory: Backend/fms
 
