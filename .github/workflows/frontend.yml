@@ -47,9 +47,9 @@ jobs:
 
       - name: Verify APK Exists
         run: ls -lh frontend/lms/build/app/outputs/flutter-apk/
-      
+
       - name: Upload APK
-        uses: actions/upload-artifact@main
+        uses: actions/upload-artifact@v4
         with:
           name: flutter-apk
           path: frontend/lms/build/app/outputs/flutter-apk/**/*.apk
