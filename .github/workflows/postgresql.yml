@@ -1,0 +1,24 @@
+# postgresql.yml
+version: '3.8'
+
+services:
+  lms-db:
+    image: postgres:15-alpine
+    container_name: lms_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: lms_admin
+      POSTGRES_PASSWORD: secure_password_123
+      POSTGRES_DB: learning_management_system
+    ports:
+      - "5432:5432"
+    volumes:
+      - lms-pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lms_admin -d learning_management_system"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  lms-pg-data:
