@@ -1,4 +1,5 @@
 name: Flutter Frontend CI
+
 on:
   push:
     paths:
@@ -8,6 +9,7 @@ on:
   pull_request:
     paths:
       - 'frontend/**'
+
 jobs:
   build:
     name: Build & Test Flutter
@@ -15,44 +17,44 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
-        
+
       - name: Verify Directory Structure
         run: |
           echo "Current directory: $(pwd)"
           ls -la
           ls -la frontend/ || echo "frontend directory not found"
-          ls -la frontend/lms || echo "frontend/ directory not found"
-        
+          
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.16.0"
           cache: true
-          
+
       - name: Verify Flutter Installation
         run: flutter doctor
-        
+
       - name: Install Dependencies
         run: flutter pub get
-        working-directory: frontend/  # Adjusted to use the lms subdirectory
-        
+        working-directory: frontend/
+
       - name: Run Tests
-        run: flutter test || true  # Added || true to prevent test failures from failing the workflow
-        working-directory: frontend/  # Adjusted to use the lms subdirectory
-        
+        run: flutter test || true
+        working-directory: frontend/
+
       - name: Build APK
         run: flutter build apk --release
-        working-directory: frontend/  # Adjusted to use the lms subdirectory
-        
+        working-directory: frontend/
+
       - name: Verify APK Exists
         run: ls -lh frontend/build/app/outputs/flutter-apk/ || echo "APK directory not found"
-        
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: flutter-apk
           path: frontend/build/app/outputs/flutter-apk/**/*.apk
-          if-no-files-found: warn  # Warn instead of failing if no files found
+          if-no-files-found: warn
