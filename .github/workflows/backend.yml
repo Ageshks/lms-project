@@ -3,32 +3,38 @@ name: NestJS Backend CI
 on:
   push:
     paths:
-      - 'Backend/lms/my-nestjs-project/**'
+      - 'Backend/**'
+      - '.github/workflows/backend-ci.yml'
     branches:
       - main
+  pull_request:
+    paths:
+      - 'Backend/**'
+      - '.github/workflows/backend-ci.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
-      - uses: actions/checkout@v3
-
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        
       - name: Verify repository structure
         run: |
           echo "Current working directory: $(pwd)"
           ls -la
-          ls -la Backend/
-          ls -la Backend/lms/
-          ls -la Backend/lms/my-nestjs-project/
-        working-directory: .
-
+          ls -la Backend/ || echo "Backend directory not found"
+          ls -la Backend/lms/ || echo "Backend/lms directory not found"
+          ls -la Backend/lms/my-nestjs-project/ || echo "Project directory not found"
+        
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: 'npm'
-
+          cache-dependency-path: Backend/lms/my-nestjs-project/package-lock.json
+      
       - name: Install dependencies
         run: |
           if [ -f "package-lock.json" ]; then
@@ -37,15 +43,15 @@ jobs:
             npm install
           fi
         working-directory: Backend/lms/my-nestjs-project
-
+      
       - name: Lint
         run: npm run lint
         working-directory: Backend/lms/my-nestjs-project
-
+      
       - name: Run Tests
         run: npm run test
         working-directory: Backend/lms/my-nestjs-project
-
+      
       - name: Build
         run: npm run build
         working-directory: Backend/lms/my-nestjs-project
