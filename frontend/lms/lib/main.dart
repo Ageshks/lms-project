@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lms/screens/splash_screen.dart'; // adjust if your path is different
+import 'package:lms/screens/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());

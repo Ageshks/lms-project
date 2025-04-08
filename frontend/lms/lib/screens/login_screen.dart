@@ -49,7 +49,6 @@ class LoginScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Email Field
                   TextField(
                     decoration: InputDecoration(
                       labelText: "Your Email",
@@ -60,8 +59,6 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-
-                  // Password Field
                   TextField(
                     obscureText: true,
                     decoration: InputDecoration(
@@ -73,7 +70,6 @@ class LoginScreen extends StatelessWidget {
                       suffixIcon: const Icon(Icons.visibility_off),
                     ),
                   ),
-
                   Align(
                     alignment: Alignment.centerRight,
                     child: TextButton(
@@ -81,17 +77,13 @@ class LoginScreen extends StatelessWidget {
                       child: const Text("Forgot password?"),
                     ),
                   ),
-
-                  // 🔹 Common Button
                   CommonButton(
                     text: "Log In",
                     onPressed: () {
                       // handle login
                     },
                   ),
-
                   const SizedBox(height: 10),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -102,7 +94,6 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-
                   const Row(
                     children: [
                       Expanded(child: Divider(thickness: 1)),
@@ -113,9 +104,7 @@ class LoginScreen extends StatelessWidget {
                       Expanded(child: Divider(thickness: 1)),
                     ],
                   ),
-
                   const SizedBox(height: 10),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
