@@ -36,7 +36,7 @@ jobs:
 
       - name: Install Dependencies
         run: flutter pub get
-        working-directory: frontend/
+        working-directory: frontend/lms
 
       - name: Run Tests
         run: flutter test || true
@@ -44,7 +44,7 @@ jobs:
 
       - name: Build APK
         run: flutter build apk --release
-        working-directory: frontend/
+        working-directory: frontend/lms
 
       - name: Verify APK Exists
         run: ls -lh frontend/build/app/outputs/flutter-apk/ || echo "APK directory not found"
