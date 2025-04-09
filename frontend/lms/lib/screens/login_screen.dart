@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lms/screens/signup_screen.dart';
 import '../utils/constants.dart';
 import '../widgets/custom_buttons.dart';
 
@@ -89,8 +90,14 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       const Text("Don't have an account?"),
                       TextButton(
-                        onPressed: () {},
-                        child: const Text("Sign up"),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const SignUpScreen()),
+                          );
+                        },
+                        child: const Text("Sign Up"),
                       ),
                     ],
                   ),
